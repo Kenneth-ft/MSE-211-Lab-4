@@ -1,0 +1,15 @@
+w = size(t1a);
+
+%theta 1
+t1a_x = t1a(1,1:w(2));
+t1a_y = t1a(2,1:w(2));
+t1v_x = t1v(1,1:w(2));
+t1v_y = t1v(2,1:w(2));
+
+%theta 2
+
+%theta 3
+
+%theta 4
+
+%theta 5
