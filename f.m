@@ -6,5 +6,5 @@ function [y] = f(theta)
         I_g = 1.2*10^(-3);
         g = 9.81;
     %Evaluate function for every of theta
-    y = -((m*g*r)/(I_g + m*(r^2)))*sind(theta);
+    y = -((m*g*r)/(I_g + m*(r.^2)))*sind(theta);
 end

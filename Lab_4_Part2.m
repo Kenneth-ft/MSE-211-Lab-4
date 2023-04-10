@@ -10,10 +10,11 @@ h = 0.1;
 theta = [13.3315 21.567 36.8095 51.233 64.337];
 
 %Initial conditions
-vi = 0;
 
-for i = 0:4
-    thetai = theta(1);
+
+for i = 1:5
+    vi = 0;
+    thetai = theta(i);
     for ti = 0:0.1:8
     %For theta1
     %Determine dx1, dv1
@@ -44,6 +45,7 @@ for i = 0:4
     vi = vi_1;
     end
     %Display values of final theta and v
+    i
     vi
     thetai
 end
