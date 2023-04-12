@@ -1,51 +1,79 @@
-%Define variables
-m = 0.1270;
-l = 0.3365;
-r = 0.1778;
-I_g = (1.2)*10^(-3);
-g = 9.81;
-h = 0.1;
+% Define variables
+h = 0.1; % Time step
+t_end = 8; % End time
 
-%Initial angles in degrees
+% Initial angles in degrees
 theta = [13.3315 21.567 36.8095 51.233 64.337];
+theta = theta * (pi / 180); % Convert degrees to radians
 
-%Initial conditions
+% Initialize arrays for storing results
+time = 0:h:t_end;
+theta_values = zeros(5, length(time));
+v_values = zeros(5, length(time));
 
-
+% Loop through initial angles
 for i = 1:5
     vi = 0;
     thetai = theta(i);
-    for ti = 0:0.1:8
-    %For theta1
-    %Determine dx1, dv1
-    dtheta1 = h*vi;
-    dv1 = h*f(thetai);
-
-    %Determine dx2, dv2
-    dtheta2 = h*(vi + 0.5*dv1);
-    theta_i2 = thetai + 0.5*dtheta1;
-    dv2 = h*f(theta_i2);
-
-    % %Determine dx3, and dv3
-    dtheta3 = h*(vi + 0.5*dv2);
-    theta_i3 = thetai + 0.5*dtheta2;
-    dv3 = h*f(theta_i3);
-
-    % %Determine dx4, and dv4
-    dtheta4 = h*(vi + dv3);
-    theta_i4 = thetai + dtheta3;
-    dv4 = h*f(theta_i4);
-    
-    % %Determine xi+1 and vi+1
-    thetai_1 = thetai + (1/6)*(dtheta1 + 2*dtheta2 + 2*dtheta3 + dtheta4);
-    vi_1 = vi + (1/6)*(dv1 + 2*dv2 + 2*dv3 + dv4);
-    
-    %Reassgining variables
-    thetai = thetai_1;
-    vi = vi_1;
+    y = [thetai, vi]; % Initial condition for the ODE
+    for j = 1:length(time)
+        ti = time(j);
+        
+        % Apply RK4 to ODE
+        y = rk4_step(ti, y, h, @my_system);
+        
+        % Store the results
+        theta_values(i, j) = y(1);
+        v_values(i, j) = y(2) * l;  % Convert angular velocity to linear velocity
     end
-    %Display values of final theta and v
-    i
-    vi
-    thetai
+end
+
+% Plot theta and v for each initial angle
+figure;
+% First subplot for Theta vs. Time
+subplot(2, 1, 1);
+hold on;
+for i = 1:5
+    plot(time, theta_values(i, :));
+end
+% Labels and title for the first subplot
+ylabel('Theta (rad)');
+xlabel('Time (s)');
+title('Theta vs. Time');
+legend('13.33°', '21.57°', '36.81°', '51.23°', '64.34°');
+
+% Second subplot for Linear Velocity vs. Time
+subplot(2, 1, 2);
+hold on;
+for i = 1:5
+    plot(time, v_values(i, :));
+end
+% Labels and title for the second subplot
+ylabel('v (m/s)');
+xlabel('Time (s)');
+title('Linear Velocity vs. Time');
+legend('13.33°', '21.57°', '36.81°', '51.23°', '64.34°');
+
+% The system of ODEs for the pendulum
+function dydt = my_system( y)
+    m = 0.1270;
+    l = 0.3365;
+    r = 0.1778;
+    I_g = 1.2*10^(-3);
+    g = 9.81;
+
+    % y(1) represents the original function y(t)
+    % y(2) represents the first derivative v(t) = y'(t)
+    dydt = zeros(2, 1);
+    dydt(1) = y(2); % y'(t) = v(t)
+    dydt(2) = -((m*g*r)/(I_g + m*(r.^2)))*sin(y(1)); % v'(t) = f(t, y(t), v(t))
+end
+
+% The RK4 method implementation for solving the ODEs
+function y_next = rk4_step(t, y, h, my_system)
+    k1 = h * my_system(y);
+    k2 = h * my_system(y + k1/2);
+    k3 = h * my_system(y + k2/2);
+    k4 = h * my_system(y + k3);
+    y_next = y + (k1 + 2*k2 + 2*k3 + k4)/6;
 end

@@ -24,10 +24,10 @@ function dydt = my_system(t, y)
     dydt(2)  = -((m*g*r)/(I_g + m*(r.^2)))*sind(y); % v'(t) = f(t, y(t), v(t))
 end
 
-function y_next = rk4_step(t, y, h, func)
-    k1 = h * func(t, y);
-    k2 = h * func(t + h/2, y + k1/2);
-    k3 = h * func(t + h/2, y + k2/2);
-    k4 = h * func(t + h, y + k3);
+function y_next = rk4_step(t, y, h, my_system)
+    k1 = h * my_system(t, y);
+    k2 = h * my_system(t + h/2, y + k1/2);
+    k3 = h * my_system(t + h/2, y + k2/2);
+    k4 = h * my_system(t + h, y + k3);
     y_next = y + (k1 + 2*k2 + 2*k3 + k4)/6;
 end
