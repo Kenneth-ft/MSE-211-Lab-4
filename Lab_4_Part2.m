@@ -27,7 +27,12 @@ for i = 1:5
         theta_values(i, j) = y(1);
         v_values(i, j) = y(2) * l;  % Convert angular velocity to linear velocity
     end
+    % Report the maximum values of theta and v for each initial angle
+report_max_values(theta_values, v_values,i);
 end
+
+
+
 
 % Plot theta and v for each initial angle
 figure;
@@ -55,6 +60,8 @@ xlabel('Time (s)');
 title('Linear Velocity vs. Time');
 legend('13.33°', '21.57°', '36.81°', '51.23°', '64.34°');
 
+
+
 % The system of ODEs for the pendulum
 function dydt = my_system( y)
     m = 0.1270;
@@ -76,4 +83,20 @@ function y_next = rk4_step(t, y, h, my_system)
     k3 = h * my_system(y + k2/2);
     k4 = h * my_system(y + k3);
     y_next = y + (k1 + 2*k2 + 2*k3 + k4)/6;
+end
+
+function [theta_max, v_max] = report_max_values(theta_values, v_values, i)
+    l = 0.3365;
+    % Find the maximum theta value and its index
+    [theta_max_r, theta_index] = max(max(theta_values));
+    theta_max = theta_max_r * 180 / pi; % Convert radians to degrees
+
+    % Find the maximum v value and its index
+    [v_max_r, v_index] = max(max(v_values));
+    v_max = v_max_r * 180 / pi * l; % Convert radians/s to m/s
+
+    % Display the results
+    fprintf('index: %d\n', i)
+    fprintf('Maximum Theta Value: %.2f degrees\n', theta_max);
+    fprintf('Maximum Linear Velocity Value: %.2f m/s\n', v_max);
 end
