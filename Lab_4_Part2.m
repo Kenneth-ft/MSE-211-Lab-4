@@ -2,7 +2,7 @@
 h = 0.1; % Time step
 t_end = 8; % End time
 
-% Initial angles in degrees
+% Initial angles in degrees (from data)
 theta = [13.3315 21.567 36.8095 51.233 64.337];
 theta = theta * (pi / 180); % Convert degrees to radians
 
