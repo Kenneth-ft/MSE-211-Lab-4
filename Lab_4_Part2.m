@@ -1,4 +1,5 @@
 % Define variables
+l = 0.3365;
 h = 0.1; % Time step
 t_end = 8; % End time
 
@@ -57,7 +58,6 @@ legend('13.33°', '21.57°', '36.81°', '51.23°', '64.34°');
 % The system of ODEs for the pendulum
 function dydt = my_system( y)
     m = 0.1270;
-    l = 0.3365;
     r = 0.1778;
     I_g = 1.2*10^(-3);
     g = 9.81;
